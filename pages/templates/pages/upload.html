@@ -18,7 +18,7 @@
         </form>
         <div id="uploadSec" style="margin-top: 20px; width: 50%; display: none;">
                 <progress id="uploadProgress" value="0" max="100" style="width: 100%; display: inline;"></progress>
-            <p id="uploadStatus">Upload progress: 0%</p>
+                <p id="uploadStatus">Upload progress: 0%</p>
         </div>
         {% if message %}
             <p>{{ message }}</p>
@@ -37,6 +37,7 @@
     <div>
         <a href="/">Back to Home</a>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         document.querySelector('form').addEventListener('submit', function(e) {
             e.preventDefault(); // Prevent the default form submission
@@ -62,7 +63,7 @@
                     // Reset the progress bar and status message
                     document.getElementById('uploadProgress').style.display="none";
                     document.getElementById('uploadProgress').value = 0; // Reset progress bar to 0
-                    document.getElementById('uploadStatus').innerHTML = 'Upload complete'; // Update status text to show completion
+                    document.getElementById('uploadStatus').innerHTML = 'Upload complete, Embeddings Created'; // Update status text to show completion
                 } else {
                     document.getElementById('uploadStatus').innerHTML = 'Error uploading file'; // Show error message
                 }

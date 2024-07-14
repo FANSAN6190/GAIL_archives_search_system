@@ -54,32 +54,39 @@ class EmbeddingsHandler:
         file_name = self.clean_filename(file_name)
         text = self.preprocess_text(doc_path)
         if text:
-            embedding = self.model.encode(text)
-            if np.all(np.isnan(embedding)):
+            text_embedding = self.model.encode(text)
+            filename_embedding = self.model.encode(file_name)
+            if np.all(np.isnan(text_embedding))  and np.all(np.isnan(filename_embedding)):
                 print(f"No words in {file_name} are in the model's vocabulary. Skipping this file.")
                 return False
-            embedding = embedding.tolist()            
-            pinecone_metadata = {'filename': file_name}
-            self.index.upsert([(file_name, embedding, pinecone_metadata)])
-            return True
+            combined_embedding = (text_embedding + 2 * filename_embedding) / 3
+
+            if not np.all(np.isnan(combined_embedding)):
+                combined_embedding = combined_embedding.tolist()            
+                pinecone_metadata = {'filename': file_name}
+                self.index.upsert([(file_name, combined_embedding, pinecone_metadata)])
+                return True
+            else:
+                print(f"Combined embedding for {file_name} resulted in NaN. Skipping this file.")
+                return False
         else:
             return False
 
     def search_documents(self, query):
         query_embedding = self.model.encode([query])[0]
-        search_results = self.index.query(vector=query_embedding.tolist(), top_k=10)
+        search_results = self.index.query(vector=query_embedding.tolist(), top_k=50)
 
-        query_words = set(query.lower().split())
-        for match in search_results['matches']:
-            doc_id_words = set(match['id'].lower().replace('.pdf', '').replace('_', ' ').replace('-', ' ').split())
-            match['word_matches'] = 0
-            for query_word in query_words:
-                best_match, similarity = process.extractOne(query_word, doc_id_words)
-                if similarity >= 80:
-                    match['word_matches'] += 1
+        # query_words = set(query.lower().split())
+        # for match in search_results['matches']:
+        #     doc_id_words = set(match['id'].lower().replace('.pdf', '').replace('_', ' ').replace('-', ' ').split())
+        #     match['word_matches'] = 0
+        #     for query_word in query_words:
+        #         best_match, similarity = process.extractOne(query_word, doc_id_words)
+        #         if similarity >= 80:
+        #             match['word_matches'] += 1
 
-        sorted_results = sorted(search_results['matches'], key=lambda x: (-x['word_matches'], -x['score']))
-        search_results['matches'] = sorted_results
+        # sorted_results = sorted(search_results['matches'], key=lambda x: (-x['word_matches'], -x['score']))
+        # search_results['matches'] = sorted_results
 
         return search_results
     

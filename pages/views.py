@@ -56,6 +56,6 @@ def upload(request):
             message = 'Failed to create embeddings for the following files:'
         else:
             message = 'All files processed successfully.'
-        return render(request, "pages/upload.html", {'message': message, 'failed_files': failed_files})
+        return render(request, "pages/upload.html", {'message': message, 'failed_files': failed_files, "status": "complete"})
     
     return render(request, "pages/upload.html")
