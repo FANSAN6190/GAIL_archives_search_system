@@ -4,17 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Documents</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>Search Documents</h1>
-    <form id="searchForm" action="/searchresults" method="post">
-        {% csrf_token %}
-        <label for="searchInput">Enter Query:</label>
-        <input type="text" id="searchInput" name="query" value="">
-        <input type="submit" value="Search">
-    </form>
-    <a href="/">Back to Home</a>
-    <hr>
-    <div id="searchResult"></div>
+    <div style="width: 70em;">
+        <h1>Search Documents</h1>
+        <form id="searchForm" action="/searchresults" method="get">
+            <label for="searchInput">Enter Query:</label>
+            <input type="text" id="searchInput" name="query" value="" required>
+            <input type="submit" value="Search">
+        </form>
+        <br>
+        <iframe id="searchResultsFrame" style="width:100%; height:1px;"></iframe>
+        <a href="/">Back to Home</a>
+    </div>
+    <script>
+        document.getElementById('searchForm').onsubmit = function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            // document.getElementById("searchResultsFrame").style.height = "45em";
+            var query = document.getElementById('searchInput').value;
+            var iframe = document.getElementById('searchResultsFrame');
+            iframe.style.height = "45em";
+            iframe.src = '/searchresults?query=' + encodeURIComponent(query);
+            return false; // Prevent the form from submitting in the traditional way
+        };
+    </script>
 </body>
 </html>

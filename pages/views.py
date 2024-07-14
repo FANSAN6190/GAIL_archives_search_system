@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from pages.service.EmbeddingsHandler import EmbeddingsHandler
 import os
-import threading
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 embeddingsHandler = EmbeddingsHandler()
 
@@ -11,14 +11,21 @@ def home(request):
     return render(request, "pages/home.html", {})
 
 def search(request):
-    if request.method == 'POST':
-        query = request.POST.get('query')
-        print(f"Query received: {query}")
-        result=embeddingsHandler.search_documents(query)
-        print("search result :: ",result)
-        return render(request, "pages/searchresult.html", {'results': result['matches']})
-    
+    # if request.method == 'POST':
+    #     query = request.POST.get('query')
+    #     print(f"Query received: {query}")
+    #     result=embeddingsHandler.search_documents(query)
+    #     print("search result :: ",result)
+    #     return render(request, "pages/searchresult.html", {'results': result['matches']})
     return render(request, "pages/search.html", {})
+
+@xframe_options_exempt
+def searchDocForQuery(request):
+    query = request.GET.get('query', '')
+    print(f"Query received: {query}")
+    result=embeddingsHandler.search_documents(query)
+    print("search result :: ",result)
+    return render(request, "pages/searchresult.html", {'results': result['matches'], 'dir_path': settings.MEDIA_URL+'UplodedDocs/'})
 
 def create_embeddings_in_background(uploaded_files, file_dir):
     failed_files = []

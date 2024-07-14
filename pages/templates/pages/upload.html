@@ -4,38 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Documents</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     <div>
-        <form action="/upload" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h1>Upload Document files:</h1>
-            <p>supported file types : pdf, txt, html</p>
-            <input onclick="resetProgress()" type="file"  id="file" name="file" accept=".pdf,.txt" multiple required>
-            <input onclick="resetProgress()" type="submit" value="Upload">
-            <br>
-            <br>
-        </form>
-        <div id="uploadSec" style="margin-top: 20px; width: 50%; display: none;">
-                <progress id="uploadProgress" value="0" max="100" style="width: 100%; display: inline;"></progress>
-                <p id="uploadStatus">Upload progress: 0%</p>
-        </div>
-        <!-- {% if message %}
-            <p>{{ message }}</p>
-            {% if failed_files %}
-                <p>Failed files:</p>
-                <ul>
-                    {% for file in failed_files %}
-                        <li>{{ file }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endif %} -->
-        <p>Please note: Uploading a large number of files may temporarily slow down the site.<br> allow a few minutes for the process to complete before navigating away from the page</p>
+        <div>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h1>Upload Document files:</h1>
+                <p>supported file types : pdf, txt, html</p>
+                <input onclick="resetProgress()" type="file"  id="file" name="file" accept=".pdf,.txt" multiple required>
+                <input onclick="resetProgress()" type="submit" value="Upload">
+                <br>
+                <br>
+            </form>
+            <div id="uploadSec" style="margin-top: 20px; width: 50%; display: none;">
+                    <progress id="uploadProgress" value="0" max="100" style="width: 100%; display: inline;"></progress>
+                    <p id="uploadStatus">Upload progress: 0%</p>
+            </div>
+            <!-- {% if message %}
+                <p>{{ message }}</p>
+                {% if failed_files %}
+                    <p>Failed files:</p>
+                    <ul>
+                        {% for file in failed_files %}
+                            <li>{{ file }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %} -->
+            <p>Please note: Uploading a large number of files may temporarily slow down the site.<br> allow a few minutes for the process to complete before navigating away from the page</p>
 
-    </div>
-    <div>
-        <a href="/">Back to Home</a>
+        </div>
+        <div>
+            <a href="/">Back to Home</a>
+        </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>

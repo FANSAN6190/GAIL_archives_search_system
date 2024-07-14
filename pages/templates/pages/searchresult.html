@@ -4,16 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        .centered-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-inline: "10em";
+        }
+        .results {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>Search Results</h1>
-    <ul>
-        {% for result in results %}
-            <li>
-                <strong>ID:</strong> {{ result.id }}<br>
-                <strong>Score:</strong> {{ result.score }}<br>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="centered-container">
+        <div>
+            <h1 >Search Results</h1>
+        </div>
+        <table>
+            {% if results %}
+                {% for result in results %} 
+                    <tr>
+                        <td><strong>ID:</strong> <a href="{{ dir_path }}{{ result.id }}" target="_blank"> {{ result.id }}</a><br></td>
+                        <td><strong>Score:</strong> {{ result.score }}<br></td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <h3>No results found</h3>
+            {% endif %}
+        </table>
+    </div>
 </body>
 </html>
