@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Documents</title>
+</head>
+<body>
+    <h1>Search Documents</h1>
+    <form id="searchForm" action="/searchresults" method="post">
+        {% csrf_token %}
+        <label for="searchInput">Enter Query:</label>
+        <input type="text" id="searchInput" name="q" value="">
+        <input type="submit" value="Search">
+    </form>
+    <a href="/">Back to Home</a>
+    <hr>
+    <div id="searchResult"></div>
+</body>
+</html>

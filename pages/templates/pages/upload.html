@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Documents</title>
+</head>
+<body>
+    <div>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h1>Upload Document files:</h2>
+            <p>supported file types : pdf, txt, html</p>
+            <input type="file"  id="file" name="file" accept=".pdf,.txt,.html" multiple required>
+            <input type="submit" value="Upload">
+            <br>
+            <br>
+        </form>
+        <div style="margin-top: 20px;">
+            <progress id="uploadProgress" value="0" max="100" style="width: 100%;"></progress>
+            <p id="uploadStatus">Upload progress: 0%</p>
+        </div>
+        <p>Please note: Uploading a large number of files may temporarily slow down the site due to heavy load on server. <br>If this happens, don't worry. Your files will continue to upload in the background. Please allow a few minutes <br>for the process to complete before navigating away from the page</p>
+
+    </div>
+    <div>
+        <a href="/">Back to Home</a>
+    </div>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            var formData = new FormData(this);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true);
+        
+            // Update the progress bar
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    var percentComplete = (event.loaded / event.total) * 100;
+                    var progress = document.getElementById('uploadProgress');
+                    var status = document.getElementById('uploadStatus');
+                    progress.value = percentComplete;
+                    status.innerHTML = 'Upload progress: ' + Math.round(percentComplete) + '%';
+                }
+            };
+        
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Reset progress bar and status message
+                    var progress = document.getElementById('uploadProgress');
+                    var status = document.getElementById('uploadStatus');
+                    progress.value = 0;
+                    status.innerHTML = 'Upload Complete!';
+                } else {
+                    alert('Upload failed. Server responded with status: ' + xhr.status);
+                }
+            };
+        
+            xhr.send(formData);
+        });
+        </script>
+</body>
+</body>
+</html>
