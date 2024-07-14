@@ -20,7 +20,7 @@
                 <progress id="uploadProgress" value="0" max="100" style="width: 100%; display: inline;"></progress>
                 <p id="uploadStatus">Upload progress: 0%</p>
         </div>
-        {% if message %}
+        <!-- {% if message %}
             <p>{{ message }}</p>
             {% if failed_files %}
                 <p>Failed files:</p>
@@ -30,7 +30,7 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-        {% endif %}
+        {% endif %} -->
         <p>Please note: Uploading a large number of files may temporarily slow down the site.<br> allow a few minutes for the process to complete before navigating away from the page</p>
 
     </div>
@@ -54,6 +54,9 @@
                     var status = document.getElementById('uploadStatus');
                     progress.value = percentComplete; // Update the progress bar value
                     status.innerHTML = 'Upload progress: ' + Math.round(percentComplete) + '%'; // Update the status text
+                    if(Math.round(percentComplete)>99){
+                        document.getElementById('uploadStatus').innerHTML = 'Upload complete, Creating Embeddings.....'; 
+                    }
                 }
             };
     
@@ -63,7 +66,7 @@
                     // Reset the progress bar and status message
                     document.getElementById('uploadProgress').style.display="none";
                     document.getElementById('uploadProgress').value = 0; // Reset progress bar to 0
-                    document.getElementById('uploadStatus').innerHTML = 'Upload complete, Embeddings Created'; // Update status text to show completion
+                    document.getElementById('uploadStatus').innerHTML = 'Embeddings Created'; // Update status text to show completion
                 } else {
                     document.getElementById('uploadStatus').innerHTML = 'Error uploading file'; // Show error message
                 }
