@@ -9,10 +9,10 @@
     <div>
         <form action="/upload" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <h1>Upload Document files:</h2>
+            <h1>Upload Document files:</h1>
             <p>supported file types : pdf, txt, html</p>
-            <input onclick="resetProgress()" type="file"  id="file" name="file" accept=".pdf,.txt,.html" multiple required>
-            <input type="submit" value="Upload">
+            <input onclick="resetProgress()" type="file"  id="file" name="file" accept=".pdf,.txt" multiple required>
+            <input onclick="resetProgress()" type="submit" value="Upload">
             <br>
             <br>
         </form>
@@ -20,7 +20,18 @@
                 <progress id="uploadProgress" value="0" max="100" style="width: 100%; display: inline;"></progress>
             <p id="uploadStatus">Upload progress: 0%</p>
         </div>
-        <p>Please note: Uploading a large number of files may temporarily slow down the site. <br>If this happens, don't worry. Your files will continue to upload in the background. Please allow a few minutes <br>for the process to complete before navigating away from the page</p>
+        {% if message %}
+            <p>{{ message }}</p>
+            {% if failed_files %}
+                <p>Failed files:</p>
+                <ul>
+                    {% for file in failed_files %}
+                        <li>{{ file }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endif %}
+        <p>Please note: Uploading a large number of files may temporarily slow down the site.<br> allow a few minutes for the process to complete before navigating away from the page</p>
 
     </div>
     <div>
