@@ -10,7 +10,7 @@
     <form id="searchForm" action="/searchresults" method="post">
         {% csrf_token %}
         <label for="searchInput">Enter Query:</label>
-        <input type="text" id="searchInput" name="q" value="">
+        <input type="text" id="searchInput" name="query" value="">
         <input type="submit" value="Search">
     </form>
     <a href="/">Back to Home</a>

@@ -11,16 +11,16 @@
             {% csrf_token %}
             <h1>Upload Document files:</h2>
             <p>supported file types : pdf, txt, html</p>
-            <input type="file"  id="file" name="file" accept=".pdf,.txt,.html" multiple required>
+            <input onclick="resetProgress()" type="file"  id="file" name="file" accept=".pdf,.txt,.html" multiple required>
             <input type="submit" value="Upload">
             <br>
             <br>
         </form>
-        <div style="margin-top: 20px;">
-            <progress id="uploadProgress" value="0" max="100" style="width: 100%;"></progress>
+        <div id="uploadSec" style="margin-top: 20px; width: 50%; display: none;">
+                <progress id="uploadProgress" value="0" max="100" style="width: 100%; display: inline;"></progress>
             <p id="uploadStatus">Upload progress: 0%</p>
         </div>
-        <p>Please note: Uploading a large number of files may temporarily slow down the site due to heavy load on server. <br>If this happens, don't worry. Your files will continue to upload in the background. Please allow a few minutes <br>for the process to complete before navigating away from the page</p>
+        <p>Please note: Uploading a large number of files may temporarily slow down the site. <br>If this happens, don't worry. Your files will continue to upload in the background. Please allow a few minutes <br>for the process to complete before navigating away from the page</p>
 
     </div>
     <div>
@@ -29,36 +29,42 @@
     <script>
         document.querySelector('form').addEventListener('submit', function(e) {
             e.preventDefault(); // Prevent the default form submission
+            document.getElementById('uploadSec').style.display="inline";
             var formData = new FormData(this);
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/upload', true);
-        
+    
             // Update the progress bar
             xhr.upload.onprogress = function(event) {
                 if (event.lengthComputable) {
                     var percentComplete = (event.loaded / event.total) * 100;
                     var progress = document.getElementById('uploadProgress');
                     var status = document.getElementById('uploadStatus');
-                    progress.value = percentComplete;
-                    status.innerHTML = 'Upload progress: ' + Math.round(percentComplete) + '%';
+                    progress.value = percentComplete; // Update the progress bar value
+                    status.innerHTML = 'Upload progress: ' + Math.round(percentComplete) + '%'; // Update the status text
                 }
             };
-        
+    
+            // When the upload is complete
             xhr.onload = function() {
-                if (xhr.status === 200) {
-                    // Reset progress bar and status message
-                    var progress = document.getElementById('uploadProgress');
-                    var status = document.getElementById('uploadStatus');
-                    progress.value = 0;
-                    status.innerHTML = 'Upload Complete!';
+                if (xhr.status == 200) {
+                    // Reset the progress bar and status message
+                    document.getElementById('uploadProgress').style.display="none";
+                    document.getElementById('uploadProgress').value = 0; // Reset progress bar to 0
+                    document.getElementById('uploadStatus').innerHTML = 'Upload complete'; // Update status text to show completion
                 } else {
-                    alert('Upload failed. Server responded with status: ' + xhr.status);
+                    document.getElementById('uploadStatus').innerHTML = 'Error uploading file'; // Show error message
                 }
             };
-        
-            xhr.send(formData);
+    
+            xhr.send(formData); // Send the form data
         });
-        </script>
+
+        function resetProgress() {
+            document.getElementById('uploadSec').style.display="none";
+            document.getElementById('uploadProgress').style.display="inline";
+        }
+    </script>
 </body>
 </body>
 </html>
